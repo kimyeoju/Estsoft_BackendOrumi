@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <p class="main-title">블로그 게시판 첫 화면입니다.</p>
+    <form action="{% url 'blog:write' %}" method="get">
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ request.GET.next }}">
+        <input type="submit" value="글 작성" class="btn btn-outline-success">
+    </form>
+
+    <!-- '글작성 화면' 경로 a태그 넣어주기 -->
+    <!-- get으로 보여주기 때문에 get form이 열릴 것이다. -->
+    <!-- <a href="{% url 'blog:write' %}" class="btn btn-outline-success">글 작성</a> 1-->
+
+    <!-- 조건문 -->
+    <!-- 글이 있을 때 : 테이블 출력-->
+    {% if posts %}
+    <!-- posts views.py에서 context_object_name 선언 -->
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <!-- 첫번째 줄 시작 -->
+                <tr>
+                    <td>제목</td>
+                    <td>내용</td>
+                    <td>작성자</td>
+                </tr>
+                <!-- 첫번째 줄 끝 -->
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <!-- posts 안에 post 순회 -->
+                <!-- 예를들어 pk=post.pk -> 순회를 도는 post를 써줌 -->
+                <!-- 두번째 줄 시작 -->
+                <tr>
+                    <td><a href="{% url 'blog:detail' pk=post.pk %}" class="btn">{{ post.title }}</a></td>
+                    <td>{{ post.content }}</td>
+                    <td>{{ post.writer }}</td>
+                </tr>
+                <!-- 두번째 줄 끝 -->
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <!-- 글이 없을 때 문구출력 -->
+    <p>작성된 게시물이 없습니다.</p>
+    <!-- if문을 닫아줌 -->
+    {% endif %}
+
+
+{% endblock %}
